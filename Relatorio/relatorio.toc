@@ -1,9 +1,0 @@
-\babel@toc {portuges}{}
-\contentsline {section}{\numberline {1}Introdu\IeC {\c c}\IeC {\~a}o}{3}
-\contentsline {section}{\numberline {2}Descri\IeC {\c c}\IeC {\~a}o e Formula\IeC {\c c}\IeC {\~a}o do Problema}{3}
-\contentsline {section}{\numberline {3}Modelo de Simula\IeC {\c c}\IeC {\~a}o}{3}
-\contentsline {subsection}{\numberline {3.1}Constru\IeC {\c c}\IeC {\~a}o}{3}
-\contentsline {subsection}{\numberline {3.2}Implementa\IeC {\c c}\IeC {\~a}o}{3}
-\contentsline {subsection}{\numberline {3.3}Execu\IeC {\c c}\IeC {\~a}o}{3}
-\contentsline {section}{\numberline {4}An\IeC {\'a}lise Estat\IeC {\'\i }stica dos Resultados}{3}
-\contentsline {section}{\numberline {5}Resultados e Conclus\IeC {\~o}es}{3}
