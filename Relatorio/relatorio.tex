@@ -58,22 +58,33 @@ Nesta secção iremos apresentar todo o processo de realização do modelo de si
 
 \subsection{Construção}
 
-Através dos dados que nos foram disponibilizados para a criação do modelo de simulação, o grupo construi assim a base para a obtenção dos valores analiticamente interessantes para a avaliar a eficácia e a eficiência da política de gestão a implementar.
+Através dos dados que nos foram disponibilizados para a criação do modelo de simulação, o grupo construiu assim a base para a obtenção dos valores analiticamente interessantes para a avaliar a eficácia e a eficiência da política de gestão a implementar.
 
-Em primeiro lugar, retiramos a informação relativa à procura (média e devio padrão) e, de seguida, os valores possíveis para o prazo de entrega bem como as suas probabilidades respetivas.
+Em primeiro lugar, retiramos a informação relativa à procura (média e desvio padrão). Para as médias assumimos que a \textbf{tendência} crescente anual de \textbf{3.8\%} nos últimos 3 anos, se manteria para o ano de 2019. Já o desvio padrão foi obtido pela fórmula:  			$$ Desvio Padrao = 8.7\% \times Media $$
+uma vez que o \textbf{coeficiente de variação} é aproximadamente constante e igual a \textbf{8.7\%}.
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.6]{distribuicaoeprazo.png}
-\caption{Valores da procura e prazo de entrega}
-\label{img:ProcuraePrazo}
+\includegraphics[scale=0.7]{distribuicao.png}
+\caption{Valores da procura semanal para cada um dos 3 períodos}
+\label{img:procura}
 \end{figure}
+
+De seguida, retiramos os valores possíveis para o prazo de entrega bem como as suas probabilidades respetivas.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7]{prazo.png}
+\caption{Valores das probabilidades dos prazos de entrega }
+\label{img:prazo}
+\end{figure}
+
 
 Posteriormente foram retirados os valores referentes ao juro de existência (\textbf{i}) e ao valor unitário do artigo (\textbf{b}). Através destes valores calculamos automaticamente o valor do custo de posse (\textbf{C1}).
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.6]{Posse.png}
+\includegraphics[scale=0.7]{Posse.png}
 \caption{Custo de Posse}
 \label{img:Posse}
 \end{figure}
@@ -88,7 +99,116 @@ O custo de encomenda (\textbf{C3}) foi automaticamente retirado do enunciado tal
 \label{img:C3C2t}
 \end{figure}
 
+
 \subsection{Implementação}
+
+Após a fase de análise dos dados disponíveis, começamos por construir um modelo de simulação que pudesse representar várias possibilidades de acontecimentos ao longo das 50 semanas (1 ano).
+
+Para tal criamos uma grelha com 50 semanas e com as várias colunas apresentadas a seguir.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.45]{grelha_simulacao.png}
+\caption{Grelha de simulação com parâmetros a avaliar}
+\label{img:grelha_sim}
+\end{figure}
+
+\subsubsection{Período}
+
+O campo período é apenas uma coluna que indica o número da semana correspondente. As semanas marcadas com a célula a cinzento correspondem às semanas onde é realizada a decisão de encomendar ou não.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.6]{periodo.png}
+\caption{Coluna do período}
+\label{img:periodo}
+\end{figure}
+
+Para o ano de 2019 estamos a considerar que as semanas estão compreendidas no intervalo \textbf{[1 , 50]}. Neste caso temos a semana 0 de forma a denotar que os campos não iniciam todos com valor 0 na primeira semana de 2019, mas que já vêm com alguns valores da última semana de 2018.
+
+
+\subsubsection{Procura}
+
+Uma vez que a procura foi retirada e calculada a partir do enunciado tal como é apresentado na secção \textbf{3.1}, para o nosso modelo de simulação adaptamos cada período a uma distribuição normal com a média e desvio padrão correspondestes aos mostrados na figura \ref{img:procura}.
+
+No documento de excel cada período é representado com uma cor diferente.
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[scale = 0.6]{procura_p1.png}
+    \caption{Procura no primeiro período.}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[scale=0.6]{procura_p2.png}
+    \caption{Procura no segundo período}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[scale=0.6]{procura_p3.png}
+    \caption{Procura no terceiro período}
+  \end{subfigure}
+  \caption{Exemplo de valores de procura para os 3 períodos}
+  \label{fig:proc}
+\end{figure}
+
+Para representar a procura como valores pertencentes a uma distribuição normal com uma dada média e desvio padrão no Excel utilizamos a fórmula:  $$ =INT(INV.NORMAL(ALEATORIO(); media ; desvio\ padrao)) $$
+
+Desta forma é possível retirar uma valor inteiro que pertença à distribuição definida. Os valores da média e do desvio padrão correspondem aos valores anteriormente calculados.
+
+
+\subsubsection{Prazo e Abastecimento}
+
+Tal como especificado no enunciado e já visto na secção anterior existe um probabilidade duma encomenda chegar uma semana após o pedido da encomenda, e ainda a probabilidade de chegar duas semanas após o pedido de encomenda.
+
+Considerando tal aspeto na ocorrência dum período após o pedido duma encomenda geramos um número aleatório entre 0 e 100, se este for menor que 40 então apresenta uma probabilidade de \textbf{0,4} (duas semanas), caso contrário apresenta uma probabilidade de \textbf{0,6} (uma semana).
+
+A fórmula usada foi:  $$ =SE(ALEATORIOENTRE(0;100) < 40 ; 0,4 ; 0,6) $$
+
+Os dois casos são ilustrados a seguir.
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[scale = 0.6]{prazo_1sem.png}
+    \caption{Prazo de entrega de uma semana}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.5\linewidth}
+    \includegraphics[scale=0.6]{prazo_2sem.png}
+    \caption{Prazo de entrega de duas semanas}
+  \end{subfigure}
+  \caption{Exemplo de abastecimento consoante o prazo}
+  \label{fig:praz}
+\end{figure}
+
+No caso de ser gerada uma probabilidade igual a \textbf{0,6} a quantidade é abastecida na primeira semana enquanto que na segunda nada é abastecido. No caso de ser gerada uma probabilidade igual a \textbf{0,4} a quantidade é abastecida na segunda semana enquanto que na primeira nada é abastecido.
+
+A quantidade a abastecer tá ligada diretamente ao valor do pedido de encomenda realizado numa dada semana anterior.
+
+
+\subsubsection{Stock Físico e Stock em Mão}
+
+Para o nosso simulador consideramos o Stock Físico ligado diretamente ao Stock em Mão da semana anterior caso este seja maior ou igual a 0. Caso o Stock em Mão seja menor que 0, então o Stock Físico da semana seguinte não terá um valor negativo mas sim o valor 0. Tal tem que ser considerado uma vez que perante uma situação de quebra ocorre \textbf{Perda de Vendas}.
+
+O Stock Físico da primeira semana é um valor que consideramos que seja o Stock em Mão da última semana de 2018. Calculamos este valor como sendo um número aleatório entre o primeiro par (S,s).
+
+O Stock em Mão duma dada semana é calculado pela fórmula: $$ StockFisico - Procura + Abastecimento $$
+
+
+\subsubsection{Encomenda (Q)}
+
+No nosso simulador uma encomenda tem a possibilidade de ser feita de duas em duas semanas, por isso quando tal acontece o valor a encomendar será dado pelo algoritmo:
+
+ $$ Q = SE(Stock\ em\ Mao\ <\ s\ ;\ SE(Stock\ em\ Mao\ <\ 0\ ;\ S\ ;\ S\ -\ Stock\ em\ Mao)\ ;\ 0 ) $$
+ 
+ 
+\subsubsection{Vendas}
+
+Para saber quantas vendas foram realizadas numa dada semana é preciso ter em consideração a procura nessa semana bem como o Stock em Mão resultante. Desta forma utilizamos a seguinte forma para saber o número de vendas: 
+
+ $$ Vendas = SE(Stock\ em\ Mao >= 0\ ;\ Procura\ ;\ Procura\ +\ Stock\ em\ Mao) $$
+
+
+
 
 \subsection{Execução}
 
