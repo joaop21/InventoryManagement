@@ -11,6 +11,7 @@
 \usepackage{listings}
 \usepackage{amsmath}
 \usepackage{mathtools}
+\usepackage{eurosym}
 \renewcommand{\familydefault}{\sfdefault}
 
 
@@ -241,25 +242,105 @@ Após algumas tentativas reparamos que os valores da procura estavam divididos e
 
 Desta forma pensamos que se tivéssemos 3 pares de valores (S,s), um para cada diferente período poderíamos ajustar melhor as quantidades a encomendar em cada período, não regendo o terceiro período (procuras mais baixas) sobre o mesmo par (S,s) do segundo periodo (procuras mais altas), por exemplo.
 
+Após decidirmos que teríamos 3 pares (S,s) tivemos que determinar analiticamente cada par. Aqui vamos apenas apresentar o cálculo do primeiro par, os restantes foram calculados tendo por base o mesmo raciocínio.
+
+Para o primeiro período tivemos que que determinar a \textbf{probabilidade de quebra} que se resume na seguinte fórmula: 
+ $$ P[DDPP > S][1,16] = \frac{1}{nº\ de\ ciclos\ no\ periodo} = \frac{1}{8} = 0.125$$
+ 
+ Após calcular esta probabilidade seria necessário consultar a tabela da \textbf{Área da Distribuição Normal Standard, N(0,1)} para obter o \textbf{Z}. No Excel podemos obter o valor de Z utilizando a fórmula:
+ $$ =ABS(INV.NORMP(probabilidade\ de\ quebra)) $$
+ 
+ Para chegar a um valor de S é preciso ainda calcular $\mu_{DDPP}$ e o $\sigma_{DDPP}$, calculadas através das fórmulas:
+ $$ INT(\ \mu_{DDPP}) = r \times (t + l) = 1479 $$
+ $$ INT(\sigma_{DDPP}) = \sqrt{\sigma_{r}^2 \times (t + l)\ \ +\ \ r^2 \times \sigma_{l}^2} = 11 $$
+ 
+ Tendo o \textbf{Z}, o \textbf{$\mu_{DDPP}$} e o \textbf{$\sigma_{DDPP}$} pode-se calcular o S através do teorema do limite central, através da fórmula:
+ $$ S =  \mu_{DDPP}\ +\ Z \times \sigma_{DDPP} = 1491$$
+ 
+ Para os outros períodos o procedimento foi exatamente o mesmo pelo que não é necessário demonstrar.
+ 
+Falta ainda, agora que se descobriu o S, calcular a relação entre S e s que pode ser dada pela fórmula:
+  $$ S = \sqrt{\frac{2 \times r \times C3}{C1}\ +\ s\ -\ r \times t} $$
+Ora substituindo os valores já obtidos chegamos a uma relação que pode ser expressa por:
+$$ s\ =\ S\ -\ 207,456 $$
+
+Desta forma para o primeiro período deduzimos um par \textbf{(1491,1283)}, para o segundo período \textbf{(1967,1759)} e para o terceiro \textbf{(1193,985)}.
+
+
+ \subsubsection{Stock médio}
+ 
+ Após ter todo o simulador a funcionar corretamente o stock médio é simplesmente a \textbf{média inteira do Stock Físico}. Uma vez que existem valores aleatórios no simulador significa que o stock médio é uma medida que varia de tentativa para tentativa.
+ 
+ \subsubsection{Quebras}
+ 
+ De igual forma ao stock médio, uma vez tendo todos os valores disponíveis as quebras não se calculam através duma fórmula pré-concebida mas sim contando todas as vezes que o \textbf{Stock em Mão é menor que 0} nas 50 semanas. As quebras são também um parâmetro variável uma vez que dependem de valores aleatórios.
+ 
+ \subsubsection{Custos}
+  
+ Tal como as duas medidas faladas anteriormente, também nos custos não podemos aplicar uma fórmula determinística uma vez que temos todos os dados ao nosso dispor e logo basta apenas calcular os custos tendo em conta o seguinte algoritmo:
+ $$ Custos = (C1\ \times\ stock\ medio)\ +\ (C2\ \times\ nº\ de\ quebras)\ +\ (C3\ \times\ nº\ de\ encomendas) $$
+ 
+ 
+ \subsubsection{Nível de Serviço}
+ 
+ O nível de serviço duma tentativa é relacionado diretamente as quebras pela fórmula:
+  $$ Nivel\ de\ Servico = 1 - \frac{nº\ de\ quebras}{nº\ de\ ciclos} $$
+  
+  
+ \subsubsection{Lucro de Vendas}
+ 
+ Para calcular o lucro das vendas basta somar todos os valores da coluna \textbf{VENDAS} e multiplicar pelo valor unitário do produto (120).
+ 
+ \subsubsection{Número de artigos em quebra por ciclo}
+  
+ O número de artigos em quebra por ciclo relaciona diretamente a quantidade de artigos em quebra no Stock em Mão e o número de ciclos pela fórmula:
+   $$ Artigos\ em\ quebra\ por\ ciclo\ = ABS(\frac{nº\ de\ artigos\ em\ quebra}{nº\ de\ ciclos}) $$
+
+
+
+
+
 
 \section{Análise Estatística dos Resultados}
 
-Após a construção, implementação e execução do modelo de simulação, foram realizados testes para encontrar a melhor abordagem a que a \textbf{ProLab} deve proceder.
+Após a construção, implementação e execução do modelo de simulação, foram realizados testes para encontrar a melhor abordagem a implementar na \textbf{ProLab}.
 
-Tendo em conta os valores armazenados no simulador, este produz uma solução analítica para o \textbf{S(nível de referência)} e o \textbf{s(nível de encomenda)}, em cada um dos três intervalos de tempo do ano.
+Tudo acerca da Simulação encontra-se na folha do Excel chamada \textbf{Simulador}, o que vamos abordar a seguir relaciona-se com os testes feitos ao simulador e os seus resultados estão na folha do Excel chamada \textbf{Testes}.
+
+Tendo em conta os valores armazenados no simulador, foi calculada uma solução analítica para o \textbf{S(nível de referência)} e o \textbf{s(nível de encomenda)}, para cada um dos três intervalos de tempo do ano como já demonstrado anteriormente.
 
 Os parâmetros que influenciaram as decisões foram a \textbf{média dos custos}, e a \textbf{média do nível de serviço}. A média dos custos, como é lógico, procuramos que fosse a \textbf{menor possível}, e a média do nível de serviço, impusemos que fosse \textbf{superior a 95\%}.
 
 A partir da solução analítica foram realizadas 25 tentativas que deram origem a uma média de custos. No mesmo momento foram também guardados os valores que dão origem a uma média do nível de serviço.
 
-De seguida, diminuiu-se o nível de referência em 5\% e os custos diminuiram também. Colocando o mesmo nível em menos 10\% os custos diminuem, mas constatou-se que o nível de serviço baixou os 95\%. Desta forma, foi possível concluir que o melhor nível de referência é menos 5\% que a solução analítica.
+Ora a partir dos valores obtidos para a solução analítica pensamos que ao baixar o \textbf{S} iríamos passar a encomendar menos e ter menos stock médio pelo que os custos iriam baixar, logo começamos por diminuir o \textbf{S} 5\% de cada vez.
 
-Tendo depois em conta o nível de encomenda, foram realizados testes para +5\%, +10\%, -5\%, -10\%, -15\%, -20\% e -25\%. Parou neste valor porque foi possível reparar que a média do nível de serviço se encontrava abaixo dos 95\% tomados como referência.
+Então diminuiu-se o nível de referência em 5\% e os custos diminuíram também. Colocando o mesmo nível em menos 10\% os custos diminuem, mas constatou-se que o nível de serviço baixou os 95\%. Desta forma, foi possível concluir que o melhor nível de referência é menos 5\% que a solução analítica.
 
-Realizando uma tabela que agregava as médias dos custos e as médias de nível de serviço foi possível constatar que o menor valor das médias dos custos ocorria quando os valores para os intervalos de tempo eram os seguintes: (1416,1329), (1869,1827), (1133,1018). O custo relacionado com estes valores foi de \textbf{32223,1044}.
+Após obter um \textbf{S} com custos menores agora faltaria variar os valores de \textbf{s}. Enquanto o nível de serviço fosse superior a \textbf{95\%} variamos o valor de \textbf{s} de 5 em 5\% tal como anteriormente.
+
+Paramos os testes quando diminuíamos \textbf{s} em 25\% porque foi possível reparar que a média do nível de serviço se encontrava abaixo dos 95\% tomado como referência.
+
+Os testes realizados podem ser vistos na seguinte figura.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.56]{testes.png}
+\caption{Testes feitos ao simulador}
+\label{img:testes}
+\end{figure}
+
+O melhor resultado encontrado foram os pares de valores para os períodos: \textbf{(1416,1148), (1869,1578), (1133,879)}. O custo relacionado com estes valores foi de \textbf{32223,1044}, com um nível de serviço \textbf{96,64\%}. Estes valores correspondem a um decréscimo de 5\% em ambos os valores analíticos calculados.
 
 
 \section{Resultados e Conclusões}
 \label{sec:conclusao}
+
+Após todo o trabalho realizado o grupo aconselha a \textbf{ProLab} a implementar um método de considere 3 pares de valores (S,s), sendo que para o primeiro período entre as semanas 1 e 16, o par seja \textbf{(1416,1148)}, para o segundo período entre as semanas 17 e 28, o par seja \textbf{(1869,1578)} e para o terceiro período entre as semanas 29 e 50, o par seja \textbf{(1133,879)}.
+
+Desta forma a empresa terá uns custos que irão rondar os \textbf{32223\euro} e apresentará um nível de serviço de aproximadamente \textbf{96,6\%}.
+
+Para concluir, o grupo acha que os objetivos do trabalho, claramente explícitos no enunciado, foram cumpridos uma vez que apresentamos uma solução à empresa \textbf{ProLab} que achamos que esteja fundamentada com umas bases fortes de \textbf{Gestão de Stocks}.
+
 
 \end{document}
