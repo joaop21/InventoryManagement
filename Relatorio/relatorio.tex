@@ -199,9 +199,9 @@ O Stock em Mão duma dada semana é calculado pela fórmula: $$ StockFisico - Pr
 No nosso simulador uma encomenda tem a possibilidade de ser feita de duas em duas semanas, por isso quando tal acontece o valor a encomendar será dado pelo algoritmo:
 
  $$ Q = SE(Stock\ em\ Mao\ <\ s\ ;\ SE(Stock\ em\ Mao\ <\ 0\ ;\ S\ ;\ S\ -\ Stock\ em\ Mao)\ ;\ 0 ) $$
- 
+
  Uma vez que é necessário usar os valores (S,s) para determinar a quantidade a encomendar e como não temos apenas um par destes valores (tal será explicado em secções subsequentes), existem dois momentos críticos durante o ano nas duas transições de período.
- 
+
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.6]{periodo_critico.png}
@@ -214,11 +214,11 @@ Como se pode constatar da figura, a semana 16 é uma semana onde se vai encomend
 Desta forma a quantidade a encomendar na semana 16 tem que ter em consideração os valores (S,s) do período seguinte.
 
 O nosso modelo de simulação encontra-se preparado para lidar com esta situação.
- 
- 
+
+
 \subsubsection{Vendas}
 
-Para saber quantas vendas foram realizadas numa dada semana é preciso ter em consideração a procura nessa semana bem como o Stock em Mão resultante. Desta forma utilizamos a seguinte forma para saber o número de vendas: 
+Para saber quantas vendas foram realizadas numa dada semana é preciso ter em consideração a procura nessa semana bem como o Stock em Mão resultante. Desta forma utilizamos a seguinte forma para saber o número de vendas:
 
  $$ Vendas = SE(Stock\ em\ Mao >= 0\ ;\ Procura\ ;\ Procura\ +\ Stock\ em\ Mao) $$
 
@@ -228,7 +228,7 @@ Para saber quantas vendas foram realizadas numa dada semana é preciso ter em co
 
 \subsubsection{Valores analíticos para os pares (S,s)}
 
-Após ter todo o simulador a construído, era preciso calcular os valores para (S,s), para antes de testar termos alguns valores de base, caso contrário teríamos de atribuir valores totalmente sem significado e avaliá-los. 
+Após ter todo o simulador a construído, era preciso calcular os valores para (S,s), para antes de testar termos alguns valores de base, caso contrário teríamos de atribuir valores totalmente sem significado e avaliá-los.
 
 Após algumas tentativas reparamos que os valores da procura estavam divididos em 3 períodos ([1,16], [17,28] e [29,50] ) pelo que determinar um par (S,s) para todo o ano poderia não ser de todo o mais ajustável.
 
@@ -243,6 +243,21 @@ Desta forma pensamos que se tivéssemos 3 pares de valores (S,s), um para cada d
 
 
 \section{Análise Estatística dos Resultados}
+
+Após a construção, implementação e execução do modelo de simulação, foram realizados testes para encontrar a melhor abordagem a que a \textbf{ProLab} deve proceder.
+
+Tendo em conta os valores armazenados no simulador, este produz uma solução analítica para o \textbf{S(nível de referência)} e o \textbf{s(nível de encomenda)}, em cada um dos três intervalos de tempo do ano.
+
+Os parâmetros que influenciaram as decisões foram a \textbf{média dos custos}, e a \textbf{média do nível de serviço}. A média dos custos, como é lógico, procuramos que fosse a \textbf{menor possível}, e a média do nível de serviço, impusemos que fosse \textbf{superior a 95\%}.
+
+A partir da solução analítica foram realizadas 25 tentativas que deram origem a uma média de custos. No mesmo momento foram também guardados os valores que dão origem a uma média do nível de serviço.
+
+De seguida, diminuiu-se o nível de referência em 5\% e os custos diminuiram também. Colocando o mesmo nível em menos 10\% os custos diminuem, mas constatou-se que o nível de serviço baixou os 95\%. Desta forma, foi possível concluir que o melhor nível de referência é menos 5\% que a solução analítica.
+
+Tendo depois em conta o nível de encomenda, foram realizados testes para +5\%, +10\%, -5\%, -10\%, -15\%, -20\% e -25\%. Parou neste valor porque foi possível reparar que a média do nível de serviço se encontrava abaixo dos 95\% tomados como referência.
+
+Realizando uma tabela que agregava as médias dos custos e as médias de nível de serviço foi possível constatar que o menor valor das médias dos custos ocorria quando os valores para os intervalos de tempo eram os seguintes: (1416,1329), (1869,1827), (1133,1018). O custo relacionado com estes valores foi de \textbf{32223,1044}.
+
 
 \section{Resultados e Conclusões}
 \label{sec:conclusao}
